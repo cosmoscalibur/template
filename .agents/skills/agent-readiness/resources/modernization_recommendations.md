@@ -210,6 +210,25 @@ repos:
 | --- | --- | --- |
 | Manual setup docs | `.devcontainer/` + Docker Compose | Codespaces-compatible, reproducible environment. |
 | No env template | `.env.example` | Document all required variables with placeholder values. |
+| Makefile (as command runner) | justfile (`just`) | `just` is purpose-built as a command runner: built-in `--list`, recipe arguments, no `.PHONY` boilerplate, no tab-sensitivity, cross-platform. Keep `make` only when incremental file-based builds are needed. See decision guide below. |
+
+#### Just vs Make — Decision Guide
+
+| Factor | Prefer `just` | Prefer `make` |
+| --- | --- | --- |
+| Purpose | Command runner (dev tasks, CI shortcuts, one-liners) | Build system with incremental file-based rebuilds |
+| New projects | ✅ Cleaner syntax, better DX, built-in `--list` and recipe args | Only if the project needs file-dependency tracking |
+| Existing Makefile (build) | Keep `make` for actual builds | ✅ Already in place and using file targets |
+| Existing Makefile (`.PHONY`-heavy) | ✅ Migrate — all-`.PHONY` Makefiles are command runners in disguise | Not recommended |
+| Cross-platform | ✅ Single binary, consistent behavior on Linux/macOS/Windows | Requires GNU Make; `nmake` on Windows has different syntax |
+| Availability | Install via `cargo`, `brew`, `snap`, `apt`, `pipx`/`uvx`, or download binary | Pre-installed on most Unix systems |
+| CI environments | Easy to install (`apt-get install just` or `cargo binstall just`) | Already available |
+| Incremental builds | ❌ Not supported — `just` always re-runs recipes | ✅ Core feature via file timestamps |
+
+> [!TIP]
+> For projects that need **both** a build system and a command runner, use `make`
+> for builds and `just` for developer tasks, or consolidate into `just` if the
+> language toolchain already handles incremental builds (Go, Rust, TypeScript).
 
 ### Documentation
 

@@ -142,7 +142,7 @@ README say `pytest` but `pytest.ini` doesn't exist? Does it say Python 3.9 but
 | E1  | Environment template              | `.env.example` or `envfile.template` with placeholder values |
 | E2  | Devcontainer config               | `.devcontainer/devcontainer.json`                            |
 | E3  | Docker Compose for local services | `docker-compose.yml` with DB, cache, etc.                    |
-| E4  | One-command local setup           | Makefile target, script, or documented single command        |
+| E4  | One-command local setup           | Makefile/justfile target, script, or documented single command. Prefer `just` (command runner) over `make` for new projects or non-build tasks; prefer `make` when incremental/file-based builds are needed. |
 | E5  | Seed data mechanism               | Fixtures, seeders, or migration-based data population        |
 
 #### Pillar 6: Debugging & Observability
