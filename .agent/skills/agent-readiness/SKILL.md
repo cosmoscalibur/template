@@ -238,7 +238,25 @@ report. The plan must follow these rules:
 6. **Pros/Cons table**: Every plan must end with a pros/cons comparison.
 7. **Verification plan**: Include automated and manual verification steps.
 
-### Step 5 — Present to User
+### Step 5 — Save the Report
+
+Save the completed evaluation to the target repository for historical tracking.
+
+1. Create `docs/agent-readiness/` in the target repo if it does not exist.
+2. Save the filled-in evaluation as a markdown file using the naming convention:
+
+   ```text
+   agent-readiness_YYYY-MM-DDThh-mm.md
+   ```
+
+   Where `YYYY-MM-DDThh-mm` is the evaluation datetime (use the local time of
+   the evaluation, with colons replaced by hyphens for filesystem
+   compatibility). Example: `agent-readiness_2026-03-09T08-37.md`.
+
+3. Fill the `Date` field in the Ecosystem table with the same datetime value in
+   ISO 8601 format (`YYYY-MM-DDThh:mm`).
+
+### Step 6 — Present to User
 
 Use `notify_user` with `BlockedOnUser: true` to request review of the
 implementation plan. Include questions about:
@@ -250,8 +268,9 @@ implementation plan. Include questions about:
 
 ## Output Artifacts
 
-The skill produces one artifact:
+The skill produces two artifacts:
 
-| File                     | Content                                                    |
-| ------------------------ | ---------------------------------------------------------- |
+| File | Content |
+| --- | --- |
 | `implementation_plan.md` | Evaluation report + phased enhancement plan (use template) |
+| `docs/agent-readiness/agent-readiness_YYYY-MM-DDThh-mm.md` | Persisted evaluation report for historical tracking |

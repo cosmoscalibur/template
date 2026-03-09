@@ -7,6 +7,7 @@ adapted for modern tooling standards and agent platform conventions.
 
 | Property | Value |
 | --- | --- |
+| Date | {{YYYY-MM-DDThh:mm}} |
 | Language | {{LANGUAGE}} |
 | Framework | {{FRAMEWORK}} |
 | Package manager | {{PACKAGE_MANAGER}} |
@@ -28,7 +29,7 @@ adapted for modern tooling standards and agent platform conventions.
 | Task Discovery | **L?** | ? | |
 | Product & Experimentation | **L?** | ? | |
 
-**Overall estimated level: L?**
+**Overall estimated level: L? (??%)**
 
 ---
 
