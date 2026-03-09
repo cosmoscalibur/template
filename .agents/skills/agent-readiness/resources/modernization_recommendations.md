@@ -230,12 +230,35 @@ repos:
 > for builds and `just` for developer tasks, or consolidate into `just` if the
 > language toolchain already handles incremental builds (Go, Rust, TypeScript).
 
-### Documentation
+### Documentation — Agent Context Strategy
 
-| Legacy | Modern | Migration Notes |
-|---|---|---|
-| No agent context | `.agent/rules/` (Antigravity) | Create always-on rules describing project structure, key commands, and constraints. |
-| AGENTS.md (Factory AI) | `.agent/rules/` (Antigravity) | Antigravity reads `.agent/rules/` automatically. More granular than a single file. |
+> [!IMPORTANT]
+> The antipattern is **duplicating** human-facing documentation into agent
+> context files. Agent context files (any format) must **reference** README.md
+> and `docs/` as the single source of truth and add only agent-specific
+> constraints.
+
+| Scenario | Recommended | Notes |
+| --- | --- | --- |
+| No agent context | Add agent context files for the target platform | `.agent/rules/` for Antigravity, `AGENTS.md` for Factory AI. Content must reference README/docs, not restate them. |
+| Agent files duplicate README/docs | Refactor to reference existing docs | Replace duplicated content with pointers (e.g., "Read `docs/architecture/` for…"). Add only agent-specific items: coding patterns, architectural constraints, doc maintenance rules. |
+
+**Example** — a well-structured `.agent/rules/` or `AGENTS.md` section:
+
+```markdown
+# Documentation Context
+
+Read the `docs/` directory for context about the application architecture
+and development recommendations before making changes.
+
+# Architecture Documentation Maintenance
+
+If any task modifies an aspect covered by `docs/architecture/`, update the
+corresponding documentation as part of the same task.
+```
+
+For README vs `docs/` role separation, hot/warm memory model, and README good
+practices, see `resources/documentation_strategy.md`.
 
 ---
 

@@ -96,7 +96,7 @@ recommend consolidation to ruff. If it uses tslint → recommend eslint. See
 
 | #   | Criterion                        | What to Look For                                                    |
 | --- | -------------------------------- | ------------------------------------------------------------------- |
-| D1  | README with setup instructions   | README.md with build, run, test commands                            |
+| D1  | README with setup instructions   | README.md with build, run, test commands (see `resources/documentation_strategy.md` for good practices checklist) |
 | D2  | Architecture documentation       | `docs/` or `docs/architecture/` with design docs                    |
 | D3  | Agent context — content quality  | See D3 sub-checks below                                             |
 | D4  | Environment variables documented | `.env.example`, settings docs, or env var table in README           |
@@ -107,11 +107,24 @@ recommend consolidation to ruff. If it uses tslint → recommend eslint. See
 
 **D3 — Agent Context Content Quality**
 
-Instead of `AGENTS.md` (Factory AI convention), Antigravity uses `.agent/rules/`
-for always-on agent context plus the README. D3 is **not** a file-existence
-check — it evaluates whether the combined content across README,
-`.agent/rules/`, docs, and config files gives an agent enough information to
-work autonomously. Check each sub-criterion:
+Different agent platforms use different file formats for agent context:
+`AGENTS.md` (Factory AI), `.agent/rules/` (Antigravity), and others. Both
+formats are valid. The **antipattern** is duplicating human-facing documentation
+into these files instead of referencing it. Agent context files should **point
+to** `README.md` and `docs/` as the single source of truth and add only
+agent-specific constraints (coding patterns, architectural constraints, doc
+maintenance rules) that humans don't typically need.
+
+**Hot / warm memory model** (see `resources/documentation_strategy.md`):
+README.md and agent context files are **hot memory** — loaded on every task.
+`docs/` is **warm memory** — loaded on demand when the task touches that area.
+Agent context files bridge the two tiers: they live in hot memory and point to
+warm memory so the agent knows where to look for deeper context.
+
+D3 is **not** a file-existence check — it evaluates whether the combined
+content across README, agent context files (`AGENTS.md` or `.agent/rules/`),
+docs, and config files gives an agent enough information to work autonomously.
+Check each sub-criterion:
 
 | #    | Sub-criterion             | What to Look For                                                                   | Where                            |
 | ---- | ------------------------- | ---------------------------------------------------------------------------------- | -------------------------------- |
@@ -210,8 +223,11 @@ report. The plan must follow these rules:
    the modern equivalent (see `resources/modernization_recommendations.md`)
    rather than adding a parallel tool. Mark legacy as "replace" not "add
    alongside".
-3. **Antigravity conventions**: Use `.agent/rules/` for agent context instead of
-   `AGENTS.md`. Use `.agent/workflows/` for repeatable commands.
+3. **Antigravity conventions**: Use `.agent/rules/` for agent context (Antigravity
+   format) and `.agent/workflows/` for repeatable commands. Regardless of agent
+   context format (`AGENTS.md`, `.agent/rules/`, etc.), agent files must
+   **reference** `README.md` and `docs/` as the single source of truth — never
+   duplicate their content.
 4. **Minimal invasiveness**: Prefer config/documentation changes over code
    changes. Code changes only when a modernization migration requires it (e.g.,
    switching test framework).
