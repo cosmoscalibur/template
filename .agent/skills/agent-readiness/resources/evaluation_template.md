@@ -1,7 +1,7 @@
 # Agent Readiness Evaluation — `{{REPO_NAME}}`
 
 Based on [Factory AI Agent Readiness](https://docs.factory.ai/web/agent-readiness/overview),
-adapted for Antigravity conventions.
+adapted for modern tooling standards and agent platform conventions.
 
 ## Ecosystem
 

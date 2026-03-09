@@ -2,7 +2,7 @@
 name: agent-readiness
 description: >-
   Evaluate a repository's readiness for autonomous AI agent development, based
-  on Factory AI's agent readiness framework adapted to the Antigravity agent.
+  on Factory AI's agent readiness framework adapted to modern tooling standards.
   Produces a scored report across 9 pillars with a phased enhancement plan.
 ---
 
@@ -11,7 +11,7 @@ description: >-
 Evaluate how well a codebase supports autonomous AI-assisted development. Based
 on
 [Factory AI Agent Readiness](https://docs.factory.ai/web/agent-readiness/overview),
-adapted to Antigravity conventions and modern tooling standards.
+adapted to modern tooling standards and agent platform conventions.
 
 ## When to Use
 
@@ -108,7 +108,7 @@ recommend consolidation to ruff. If it uses tslint → recommend eslint. See
 **D3 — Agent Context Content Quality**
 
 Different agent platforms use different file formats for agent context:
-`AGENTS.md` (Factory AI), `.agent/rules/` (Antigravity), and others. Both
+`AGENTS.md` (Factory AI), `.agent/rules/` (Gemini CLI / Antigravity), `.cursorrules` (Cursor), `.github/copilot-instructions.md` (Copilot), and others. All
 formats are valid. The **antipattern** is duplicating human-facing documentation
 into these files instead of referencing it. Agent context files should **point
 to** `README.md` and `docs/` as the single source of truth and add only
@@ -223,11 +223,12 @@ report. The plan must follow these rules:
    the modern equivalent (see `resources/modernization_recommendations.md`)
    rather than adding a parallel tool. Mark legacy as "replace" not "add
    alongside".
-3. **Antigravity conventions**: Use `.agent/rules/` for agent context (Antigravity
-   format) and `.agent/workflows/` for repeatable commands. Regardless of agent
-   context format (`AGENTS.md`, `.agent/rules/`, etc.), agent files must
-   **reference** `README.md` and `docs/` as the single source of truth — never
-   duplicate their content.
+3. **Agent platform conventions**: Use the agent context format appropriate for
+   the target platform (e.g., `.agent/rules/` for Gemini CLI, `AGENTS.md` for
+   Factory AI, `.cursorrules` for Cursor). Use `.agent/workflows/` or equivalent
+   for repeatable commands. Regardless of format, agent files must **reference**
+   `README.md` and `docs/` as the single source of truth — never duplicate
+   their content.
 4. **Minimal invasiveness**: Prefer config/documentation changes over code
    changes. Code changes only when a modernization migration requires it (e.g.,
    switching test framework).
