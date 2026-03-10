@@ -22,6 +22,44 @@ agent context, and README good practices.
 
 ---
 
+## `docs/` Directory Good Practices
+
+### Index File
+
+Every `docs/` directory should have a `README.md` (or `index.md`) that acts as
+a table of contents for the knowledge base. This file:
+
+- Links to each sub-document with a one-line description.
+- Serves as the **warm-memory entry point** for agents: instead of scanning
+  every file, the agent reads the index to decide which documents are relevant
+  to the current task.
+- Mirrors the README's role but at the `docs/` level.
+
+### Recommended Structure
+
+```text
+docs/
+├── README.md              # Index — table of contents with links
+├── architecture.md        # System architecture, component diagram
+├── coding-patterns.md     # Conventions, naming, service layer patterns
+├── api-reference.md       # Endpoint docs or link to generated docs
+├── data-model.md          # Database schema, entity relationships
+└── adr/                   # Architecture Decision Records
+    ├── 001-use-uv.md
+    └── 002-api-versioning.md
+```
+
+### Naming Conventions
+
+- Name files after the topic (e.g., `architecture.md`, `coding-patterns.md`),
+  not with numeric prefixes or dates (except ADRs, where numbering is
+  conventional).
+- Use kebab-case for multi-word filenames.
+- Keep the directory flat when possible; use subdirectories only for collections
+  (e.g., `adr/`).
+
+---
+
 ## Hot / Warm Memory Model
 
 Agent context files, README, and docs have different loading profiles. This

@@ -94,26 +94,32 @@ recommend consolidation to ruff. If it uses tslint → recommend eslint. See
 
 #### Pillar 4: Documentation
 
-| #   | Criterion                        | What to Look For                                                    |
-| --- | -------------------------------- | ------------------------------------------------------------------- |
-| D1  | README with setup instructions   | README.md with build, run, test commands (see `resources/documentation_strategy.md` for good practices checklist) |
-| D2  | Architecture documentation       | `docs/` or `docs/architecture/` with design docs                    |
-| D3  | Agent context — content quality  | See D3 sub-checks below                                             |
-| D4  | Environment variables documented | `.env.example`, settings docs, or env var table in README           |
-| D5  | API documentation                | Swagger/OpenAPI, or API docs (drf-spectacular, tsoa, protobuf docs) |
-| D6  | Contributing guide               | CONTRIBUTING.md or contributing section in README                   |
-| D7  | Changelog                        | CHANGELOG.md or release notes                                       |
-| D8  | Code conventions documented      | Style guide, naming conventions, patterns documented                |
+| #   | Criterion                        | What to Look For                                                                                                  |
+| --- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| D1  | README with setup instructions   | Tech stack, prerequisites, build/run/test/lint commands, project structure, env vars (see `resources/documentation_strategy.md`) |
+| D2  | Architecture documentation       | `docs/` with design docs, coding patterns, and a `README.md` index (see `resources/documentation_strategy.md`)    |
+| D3  | Agent context                    | See D3 sub-checks below                                                                                           |
+| D4  | Environment variables documented | `.env.example`, settings docs, or env var table in README                                                         |
+| D5  | API documentation                | Swagger/OpenAPI, or API docs (drf-spectacular, tsoa, protobuf docs)                                               |
+| D6  | Contributing guide               | CONTRIBUTING.md or contributing section in README                                                                 |
+| D7  | Changelog                        | CHANGELOG.md or release notes                                                                                     |
+| D8  | Code conventions documented      | Style guide, naming conventions, patterns documented                                                              |
 
-**D3 — Agent Context Content Quality**
+**Cross-reference accuracy**: For every Documentation criterion, verify that
+documented content matches the actual repository. Check that stated
+versions match config files, documented commands are runnable, referenced
+modules and directories exist, and described patterns reflect current code.
+Mark as ⚠️ (partial) if the documentation exists but is outdated.
+
+**D3 — Agent Context**
 
 Different agent platforms use different file formats for agent context:
-`AGENTS.md` (Factory AI), `.agent/rules/` (Gemini CLI / Antigravity), `.cursorrules` (Cursor), `.github/copilot-instructions.md` (Copilot), and others. All
-formats are valid. The **antipattern** is duplicating human-facing documentation
-into these files instead of referencing it. Agent context files should **point
-to** `README.md` and `docs/` as the single source of truth and add only
-agent-specific constraints (coding patterns, architectural constraints, doc
-maintenance rules) that humans don't typically need.
+`AGENTS.md` (Factory AI), `.agent/rules/` (Gemini CLI / Antigravity),
+`.cursorrules` (Cursor), `.github/copilot-instructions.md` (Copilot), and
+others. All formats are valid. The **antipattern** is duplicating human-facing
+documentation into these files instead of referencing it. Agent context files
+should **point to** `README.md` and `docs/` as the single source of truth and
+add only agent-specific constraints that humans don't typically need.
 
 **Hot / warm memory model** (see `resources/documentation_strategy.md`):
 README.md and agent context files are **hot memory** — loaded on every task.
@@ -121,32 +127,25 @@ README.md and agent context files are **hot memory** — loaded on every task.
 Agent context files bridge the two tiers: they live in hot memory and point to
 warm memory so the agent knows where to look for deeper context.
 
-D3 is **not** a file-existence check — it evaluates whether the combined
-content across README, agent context files (`AGENTS.md` or `.agent/rules/`),
-docs, and config files gives an agent enough information to work autonomously.
-Check each sub-criterion:
+D3 evaluates whether agent context files provide the right agent-specific
+additions on top of the shared documentation (D1 + D2). Content that belongs in
+README or `docs/` is evaluated under D1 and D2 respectively.
 
-| #    | Sub-criterion             | What to Look For                                                                   | Where                            |
-| ---- | ------------------------- | ---------------------------------------------------------------------------------- | -------------------------------- |
-| D3.1 | Tech stack documented     | Language, framework, major libraries, and their versions are stated                | README or `.agent/rules/`        |
-| D3.2 | Build/run commands        | Exact commands to install deps, build, and run locally (copy-pasteable, not prose) | README                           |
-| D3.3 | Test commands             | Exact command to run tests + any prerequisites (DB, env vars, static files)        | README or `.agent/rules/`        |
-| D3.4 | Lint/format commands      | Exact commands to lint and format (e.g., `uv run ruff check --fix .`)              | README, `.agent/rules/`, or docs |
-| D3.5 | Project structure         | Directory layout with purpose of each top-level directory                          | README or docs                   |
-| D3.6 | Coding patterns           | Key patterns the agent must follow (model conventions, service layer, naming)      | `.agent/rules/` or docs          |
-| D3.7 | Architectural constraints | Things the agent should NOT do, deprecated modules, migration-in-progress areas    | `.agent/rules/`                  |
-| D3.8 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                              | `.agent/rules/`                  |
+| #    | Sub-criterion             | What to Look For                                                                | Where                                        |
+| ---- | ------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
+| D3.1 | Architectural constraints | Things the agent should NOT do, deprecated modules, migration-in-progress areas | Agent context (`.agent/rules/`, `AGENTS.md`) |
+| D3.2 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                           | Agent context (`.agent/rules/`, `AGENTS.md`) |
 
 **Scoring D3**:
 
-- ✅ **Pass**: ≥ 6 of 8 sub-criteria present with accurate, current content
-- ⚠️ **Partial**: 3-5 sub-criteria present, or content exists but is outdated
-- ❌ **Fail**: ≤ 2 sub-criteria present, or no agent-oriented context at all
+- ✅ **Pass**: both sub-criteria present with accurate, current content
+- ⚠️ **Partial**: 1 of 2 present, or content exists but is outdated
+- ❌ **Fail**: no agent context, or agent files duplicate README/docs instead of
+  adding constraints
 
-**Evaluating content accuracy**: For each sub-criterion, verify that the
-documented commands/versions match the actual config files (e.g., does the
-README say `pytest` but `pytest.ini` doesn't exist? Does it say Python 3.9 but
-`pyproject.toml` says 3.13?).
+**Evaluating content accuracy**: Verify that agent context files reference
+existing docs rather than restating them. Check that documented constraints
+match the actual codebase state.
 
 #### Pillar 5: Dev Environment
 

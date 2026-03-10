@@ -9,9 +9,10 @@ commands to install, build, run, test, and lint the project.
 
 # Documentation Context
 
-Read the `docs/` directory for context about the application architecture,
-design decisions, coding patterns, and development recommendations before
-making changes that affect the application structure.
+Read `docs/README.md` first for an index of available documentation, then read
+the relevant sections for context about the application architecture, design
+decisions, coding patterns, and development recommendations before making
+changes that affect the application structure.
 
 When the scope of a task is not clearly defined, files are not explicitly given,
 or the shared scope may be incomplete, complement your understanding by reading

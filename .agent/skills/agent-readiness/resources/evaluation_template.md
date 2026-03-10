@@ -89,20 +89,23 @@ adapted for modern tooling standards and agent platform conventions.
 | Changelog | | |
 | Code conventions | | |
 
-**D3 — Agent Context Content Quality**
+**D1 — README Content Quality**
+
+Verify using the checklist in `resources/documentation_strategy.md`: tech stack,
+prerequisites, build/run/test/lint commands, project structure, env vars.
+
+**D2 — Docs Content Quality**
+
+Verify `docs/` has a `README.md` index, design docs, and coding patterns.
+
+**D3 — Agent Context**
 
 | Sub-criterion | Status | Evidence | Source |
 | --- | --- | --- | --- |
-| D3.1 Tech stack documented | | | |
-| D3.2 Build/run commands | | | |
-| D3.3 Test commands | | | |
-| D3.4 Lint/format commands | | | |
-| D3.5 Project structure | | | |
-| D3.6 Coding patterns | | | |
-| D3.7 Architectural constraints | | | |
-| D3.8 Doc maintenance rules | | | |
+| D3.1 Architectural constraints | | | |
+| D3.2 Doc maintenance rules | | | |
 
-**D3 Score**: ___ / 8 → ✅ (≥6) / ⚠️ (3-5) / ❌ (≤2)
+**D3 Score**: ___ / 2 → ✅ (2) / ⚠️ (1) / ❌ (0 or duplicates README/docs)
 
 **Accuracy notes**: <!-- Document any mismatches between docs and actual config -->
 
