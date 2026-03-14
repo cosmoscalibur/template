@@ -14,6 +14,10 @@ the relevant sections for context about the application architecture, design
 decisions, coding patterns, and development recommendations before making
 changes that affect the application structure.
 
+Read coding patterns and contributing guide **before planning and
+implementing** any task — these contain architectural constraints and
+conventions that apply to both humans and agents.
+
 When the scope of a task is not clearly defined, files are not explicitly given,
 or the shared scope may be incomplete, complement your understanding by reading
 relevant sections of `docs/` before proceeding.

@@ -202,6 +202,7 @@ repos:
 | Legacy | Modern | Migration Notes |
 | --- | --- | --- |
 | No scanning | Dependabot (GitHub native) | Zero-config for most ecosystems. |
+| No review cooldown | Configure review delay (15 days – 2 months, default: 15 days) | Batch dependency PRs to reduce churn. Use Dependabot grouping, Renovate schedule, or team review cadence. |
 | Manual CODEOWNERS | `.github/CODEOWNERS` | Add with appropriate team/user patterns. |
 
 ### Dev Environment

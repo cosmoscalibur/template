@@ -141,7 +141,7 @@ recommend consolidation to ruff. If it uses tslint → recommend eslint. See
 | #    | Criterion                        | What to Look For                                                                                                  |
 | ---- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | D1   | README with setup instructions   | Tech stack, prerequisites, build/run/test/lint commands, project structure, env vars (see `resources/documentation_strategy.md`) |
-| D2   | Architecture documentation       | `docs/` with design docs, coding patterns, and a `README.md` index (see `resources/documentation_strategy.md`)    |
+| D2   | Architecture documentation       | `docs/` with design docs, coding patterns, architecture. Auto-generated docs can replace manual docs; manual multi-file structure is needed only when auto-generated docs do not cover all aspects (e.g., examples, tutorials). Must include a `README.md` index (see `resources/documentation_strategy.md`) |
 | D3   | Agent context                    | See D3 sub-checks below                                                                                           |
 | D4   | Environment variables documented | `.env.example`, settings docs, or env var table in README                                                         |
 | D5   | API documentation                | Swagger/OpenAPI, or API docs (drf-spectacular, tsoa, protobuf docs). See D5 sub-checks below                      |
@@ -175,12 +175,16 @@ warm memory so the agent knows where to look for deeper context.
 
 D3 evaluates whether agent context files provide the right agent-specific
 additions on top of the shared documentation (D1 + D2). Content that belongs in
-README or `docs/` is evaluated under D1 and D2 respectively.
+README or `docs/` is evaluated under D1 and D2 respectively. Architectural
+constraints (deprecated modules, migration-in-progress areas, what NOT to do)
+belong in shared documentation (coding patterns, contributing guide, or README)
+since both humans and agents need them. Coding patterns and contributing guides
+should be read before planning and implementing.
 
-| #    | Sub-criterion             | What to Look For                                                                | Where                       |
-| ---- | ------------------------- | ------------------------------------------------------------------------------- | --------------------------- |
-| D3.1 | Architectural constraints | Things the agent should NOT do, deprecated modules, migration-in-progress areas | Agent context (`AGENTS.md`) |
-| D3.2 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                           | Agent context (`AGENTS.md`) |
+| #    | Sub-criterion             | What to Look For                                                                              | Where                       |
+| ---- | ------------------------- | --------------------------------------------------------------------------------------------- | --------------------------- |
+| D3.1 | Agent workflow references | Pointers to warm-memory docs, task-specific loading instructions, workflow commands            | Agent context (`AGENTS.md`) |
+| D3.2 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                                         | Agent context (`AGENTS.md`) |
 
 **Scoring D3**:
 
@@ -222,6 +226,13 @@ match the actual codebase state.
 | X3  | Dependency vulnerability scanning | Dependabot, Snyk, or `cargo audit` in CI                                          |
 | X4  | Secret scanning                   | GitHub secret scanning, gitleaks, or trufflehog                                   |
 | X5  | Branch protection                 | Require PR reviews, status checks (GitHub setting — note if cannot audit locally) |
+
+**X3 — Review cooldown**: Dependency update PRs (Dependabot, Renovate) should be
+configured with a **review cooldown between 15 days and 2 months** (default:
+15 days) to batch reviews and reduce churn. This is the delay before the team
+acts on a dependency update PR — not the check frequency. Evaluate whether the
+project configures a review schedule or auto-merge delay. Mark as ⚠️ if scanning
+exists but PRs are reviewed immediately with no batching strategy.
 
 #### Pillar 8: Task Discovery
 
