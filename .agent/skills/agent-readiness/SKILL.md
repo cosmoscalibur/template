@@ -21,6 +21,24 @@ adapted to modern tooling standards and agent platform conventions.
 
 ## Workflow
 
+### Step 0 — Gather Project Context
+
+Before starting the evaluation, collect the following context. If the user does
+not provide these in the prompt, **ask before proceeding**.
+
+1. **Repository type**: `issues-only`, `pr-only`, or `both`.
+   - `pr-only` → K1 (Issue templates) and K3 (Issue labeling) become **N/A**.
+   - `issues-only` → K2 (PR template) becomes **N/A**.
+   - `both` → all Task Discovery criteria apply.
+2. **Documentation language**: e.g., `English`, `Spanish`.
+   - Recorded in the Ecosystem table. During evaluation, flag mixed-language
+     documentation (docs in one language, comments/commits in another) as ⚠️
+     under D1 and D8, recommending uniform language for maintainability.
+3. **Project type**: `cloud-service`, `web-app`, `desktop-app`, `cli-tool`,
+   `library`, or `ai/ml`.
+   - Determines which criteria are **N/A** — excluded from the scoring
+     denominator. See the applicability matrix in Step 2.
+
 ### Step 1 — Detect the Ecosystem
 
 Identify the primary language and framework by inspecting root-level files:
@@ -51,14 +69,40 @@ criterion, check whether evidence exists in the repo. Mark as:
 
 #### Pillar 1: Style & Validation
 
-| #   | Criterion                 | What to Look For                                                                |
-| --- | ------------------------- | ------------------------------------------------------------------------------- |
-| S1  | Linter configured         | Config file for a linter (ruff, eslint, clippy, golangci-lint)                  |
-| S2  | Code formatter configured | Formatter config or "format" in linter config (ruff format, prettier, rustfmt)  |
-| S3  | Type checker configured   | Type checker config (pyright/mypy, TypeScript strict, Rust is typed by default) |
-| S4  | Pre-commit hooks          | `.pre-commit-config.yaml` or husky/lint-staged; hooks must match current tools  |
-| S5  | CI enforces lint/format   | CI workflow step that runs linter and formatter in check mode                   |
-| S6  | Import sorting            | Import sort configured (ruff `I`, eslint-plugin-import, goimports)              |
+| #   | Criterion                   | What to Look For                                                                |
+| --- | --------------------------- | ------------------------------------------------------------------------------- |
+| S1  | Linter configured           | Config file for a linter (ruff, eslint, clippy, golangci-lint)                  |
+| S2  | Code formatter configured   | Formatter config or "format" in linter config (ruff format, prettier, rustfmt)  |
+| S3  | Type checker configured     | Type checker config (pyright/mypy, TypeScript strict, Rust is typed by default) |
+| S4  | Pre-commit hooks            | `.pre-commit-config.yaml` or husky/lint-staged; hooks must match current tools  |
+| S5  | CI enforces lint/format     | CI workflow step that runs linter and formatter in check mode                   |
+| S6  | Import sorting              | Import sort configured (ruff `I`, eslint-plugin-import, goimports)              |
+| S7  | Linter targets changed code | Pre-commit and CI scope linting to changed files/lines only (not full project)  |
+
+**S7 — Linter scope guidance**:
+
+Both pre-commit and CI must scope linting to avoid running on the full project:
+
+- **Pre-commit**: Runs on staged files automatically (hooks handle file
+  filtering natively).
+- **CI**: Must explicitly lint only **git-changed files** (e.g.,
+  `git diff --name-only origin/main... | xargs ruff check`). Pre-commit does
+  not apply in CI; the pipeline must replicate the scoping.
+
+Recommend scope based on project status:
+
+- **File-level** (lint changed files): For greenfield projects or repos already
+  clean. Use pre-commit's native staging filter + git diff in CI.
+- **Line-level** (lint changed lines only): For legacy repos with many existing
+  violations. Use the **same linter tools** with git diff line ranges (e.g.,
+  `git diff --unified=0 | ...` piped to the linter) — no extra tools per
+  language. Must be configured in both pre-commit and CI.
+- **Full project**: Only acceptable as a **justfile task** for manual developer
+  use (e.g., `just lint-all`). Mark as ❌ if full-project linting is in
+  pre-commit or CI.
+
+The evaluator should check current project state (clean vs many violations) and
+recommend file-level or line-level accordingly.
 
 **Modernization signals**: If the repo uses isort/black/pylint separately →
 recommend consolidation to ruff. If it uses tslint → recommend eslint. See
@@ -94,16 +138,18 @@ recommend consolidation to ruff. If it uses tslint → recommend eslint. See
 
 #### Pillar 4: Documentation
 
-| #   | Criterion                        | What to Look For                                                                                                  |
-| --- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| D1  | README with setup instructions   | Tech stack, prerequisites, build/run/test/lint commands, project structure, env vars (see `resources/documentation_strategy.md`) |
-| D2  | Architecture documentation       | `docs/` with design docs, coding patterns, and a `README.md` index (see `resources/documentation_strategy.md`)    |
-| D3  | Agent context                    | See D3 sub-checks below                                                                                           |
-| D4  | Environment variables documented | `.env.example`, settings docs, or env var table in README                                                         |
-| D5  | API documentation                | Swagger/OpenAPI, or API docs (drf-spectacular, tsoa, protobuf docs)                                               |
-| D6  | Contributing guide               | CONTRIBUTING.md or contributing section in README                                                                 |
-| D7  | Changelog                        | CHANGELOG.md or release notes                                                                                     |
-| D8  | Code conventions documented      | Style guide, naming conventions, patterns documented                                                              |
+| #    | Criterion                        | What to Look For                                                                                                  |
+| ---- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| D1   | README with setup instructions   | Tech stack, prerequisites, build/run/test/lint commands, project structure, env vars (see `resources/documentation_strategy.md`) |
+| D2   | Architecture documentation       | `docs/` with design docs, coding patterns, and a `README.md` index (see `resources/documentation_strategy.md`)    |
+| D3   | Agent context                    | See D3 sub-checks below                                                                                           |
+| D4   | Environment variables documented | `.env.example`, settings docs, or env var table in README                                                         |
+| D5   | API documentation                | Swagger/OpenAPI, or API docs (drf-spectacular, tsoa, protobuf docs). See D5 sub-checks below                      |
+| D5.u | User manual                      | End-user documentation (applies to `desktop-app` and `cli-tool` project types; N/A for others)                    |
+| D5.a | Auto-generated docs              | Generated documentation (cargo doc, Sphinx, typedoc, etc.) — applies to all project types                         |
+| D6   | Contributing guide               | CONTRIBUTING.md or contributing section in README                                                                 |
+| D7   | Changelog                        | CHANGELOG.md or release notes                                                                                     |
+| D8   | Code conventions documented      | Style guide, naming conventions, patterns documented                                                              |
 
 **Cross-reference accuracy**: For every Documentation criterion, verify that
 documented content matches the actual repository. Check that stated
@@ -113,13 +159,13 @@ Mark as ⚠️ (partial) if the documentation exists but is outdated.
 
 **D3 — Agent Context**
 
-Different agent platforms use different file formats for agent context:
-`AGENTS.md` (Factory AI), `.agent/rules/` (Gemini CLI / Antigravity),
-`.cursorrules` (Cursor), `.github/copilot-instructions.md` (Copilot), and
-others. All formats are valid. The **antipattern** is duplicating human-facing
-documentation into these files instead of referencing it. Agent context files
-should **point to** `README.md` and `docs/` as the single source of truth and
-add only agent-specific constraints that humans don't typically need.
+`AGENTS.md` is the recommended universal entry file for any IDE or AI agent
+(supported by Antigravity since March 9, 2026). Alternative formats
+(`.agent/rules/`, `.cursorrules`, `.github/copilot-instructions.md`) remain
+valid. The **antipattern** is duplicating human-facing documentation into these
+files instead of referencing it. Agent context files should **point to**
+`README.md` and `docs/` as the single source of truth and add only
+agent-specific constraints that humans don't typically need.
 
 **Hot / warm memory model** (see `resources/documentation_strategy.md`):
 README.md and agent context files are **hot memory** — loaded on every task.
@@ -131,10 +177,10 @@ D3 evaluates whether agent context files provide the right agent-specific
 additions on top of the shared documentation (D1 + D2). Content that belongs in
 README or `docs/` is evaluated under D1 and D2 respectively.
 
-| #    | Sub-criterion             | What to Look For                                                                | Where                                        |
-| ---- | ------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
-| D3.1 | Architectural constraints | Things the agent should NOT do, deprecated modules, migration-in-progress areas | Agent context (`.agent/rules/`, `AGENTS.md`) |
-| D3.2 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                           | Agent context (`.agent/rules/`, `AGENTS.md`) |
+| #    | Sub-criterion             | What to Look For                                                                | Where                       |
+| ---- | ------------------------- | ------------------------------------------------------------------------------- | --------------------------- |
+| D3.1 | Architectural constraints | Things the agent should NOT do, deprecated modules, migration-in-progress areas | Agent context (`AGENTS.md`) |
+| D3.2 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                           | Agent context (`AGENTS.md`) |
 
 **Scoring D3**:
 
@@ -149,13 +195,13 @@ match the actual codebase state.
 
 #### Pillar 5: Dev Environment
 
-| #   | Criterion                         | What to Look For                                             |
-| --- | --------------------------------- | ------------------------------------------------------------ |
-| E1  | Environment template              | `.env.example` or `envfile.template` with placeholder values |
-| E2  | Devcontainer config               | `.devcontainer/devcontainer.json`                            |
-| E3  | Docker Compose for local services | `docker-compose.yml` with DB, cache, etc.                    |
+| #   | Criterion                         | What to Look For                                                                                                                                                                                            |
+| --- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E1  | Environment template              | `.env.example` or `envfile.template` with placeholder values                                                                                                                                                |
+| E2  | Devcontainer config               | `.devcontainer/devcontainer.json`                                                                                                                                                                           |
+| E3  | Docker Compose for local services | `docker-compose.yml` with DB, cache, etc.                                                                                                                                                                   |
 | E4  | One-command local setup           | Makefile/justfile target, script, or documented single command. Prefer `just` (command runner) over `make` for new projects or non-build tasks; prefer `make` when incremental/file-based builds are needed. |
-| E5  | Seed data mechanism               | Fixtures, seeders, or migration-based data population        |
+| E5  | Seed data mechanism               | Fixtures, seeders, or migration-based data population                                                                                                                                                       |
 
 #### Pillar 6: Debugging & Observability
 
@@ -194,6 +240,32 @@ match the actual codebase state.
 | P2  | Feature flags             | Feature flag system (LaunchDarkly, Unleash, env-based flags) |
 | P3  | Experiment infrastructure | A/B testing framework or experiment docs                     |
 
+#### Project-Type Applicability Matrix
+
+Criteria marked **N/A** are excluded from the scoring denominator based on the
+project type collected in Step 0. Additionally, Task Discovery criteria (K1–K4)
+are filtered by the repository type.
+
+| Criterion             | cloud | web | desktop | cli | library | ai/ml |
+| --------------------- | ----- | --- | ------- | --- | ------- | ----- |
+| B5 Dockerized build   | ✅    | ✅  | N/A     | N/A | N/A     | ⚠️    |
+| D5 API documentation  | ✅    | ✅  | N/A     | ✅  | ✅      | N/A   |
+| D5.u User manual      | N/A   | N/A | ✅      | ✅  | N/A     | N/A   |
+| D5.a Auto-gen docs    | ✅    | ✅  | ✅      | ✅  | ✅      | ✅    |
+| E3 Docker Compose     | ✅    | ✅  | N/A     | N/A | N/A     | ⚠️    |
+| E5 Seed data          | ✅    | ✅  | N/A     | N/A | N/A     | ✅    |
+| O1 Structured logging | ✅    | ✅  | ⚠️      | ⚠️  | N/A     | ⚠️    |
+| O2 Error tracking     | ✅    | ✅  | ✅      | N/A | N/A     | N/A   |
+| O4 Distributed tracing| ✅    | N/A | N/A     | N/A | N/A     | N/A   |
+| O5 Health check       | ✅    | ✅  | N/A     | N/A | N/A     | ✅    |
+| P1 Analytics          | ✅    | ✅  | ✅      | N/A | N/A     | N/A   |
+| P2 Feature flags      | ✅    | ✅  | ✅      | N/A | N/A     | N/A   |
+| P3 A/B testing        | ✅    | ✅  | N/A     | N/A | N/A     | N/A   |
+
+> [!NOTE]
+> ⚠️ in the matrix means the criterion **applies** but is commonly optional —
+> still scored normally. Only **N/A** entries are excluded from the denominator.
+
 ### Step 3 — Score and Determine Level
 
 Count pass/partial/fail per pillar. Scoring rules:
@@ -201,16 +273,20 @@ Count pass/partial/fail per pillar. Scoring rules:
 - ✅ = 1 point
 - ⚠️ = 0.5 points
 - ❌ = 0 points
+- **N/A** = excluded (does not count toward the denominator)
 
-**Level thresholds** (based on total criteria across ALL pillars):
+**Level thresholds** (based on **applicable** criteria — those not marked N/A
+for the project type and repository type):
 
-| Level | Requirement                                                                            |
-| ----- | -------------------------------------------------------------------------------------- |
-| L1    | Starting point (all repos)                                                             |
-| L2    | ≥ 80% of L1 criteria pass (S1-S3, B1-B2, T1-T4, D1, D3, E3, X1)                        |
-| L3    | L2 + ≥ 80% of L2 criteria (S4-S5, B3-B4, T5-T6, D2, D4-D5, E1-E2, O1-O2, X2-X3, K1-K2) |
-| L4    | L3 + ≥ 80% of L3 criteria (S6, B5, T7-T8, D6-D8, E4-E5, O3-O5, X4-X5, K3-K4)           |
-| L5    | L4 + ≥ 80% of L4 criteria (P1-P3 + all remaining)                                      |
+| Level | Requirement                                                                                 |
+| ----- | ------------------------------------------------------------------------------------------- |
+| L1    | Starting point (all repos)                                                                  |
+| L2    | ≥ 80% of L1 criteria pass (S1-S3, B1-B2, T1-T4, D1, D3, E3, X1)                             |
+| L3    | L2 + ≥ 80% of L2 criteria (S4-S5, S7, B3-B4, T5-T6, D2, D4-D5, E1-E2, O1-O2, X2-X3, K1-K2) |
+| L4    | L3 + ≥ 80% of L3 criteria (S6, B5, T7-T8, D5.u, D5.a, D6-D8, E4-E5, O3-O5, X4-X5, K3-K4)   |
+| L5    | L4 + ≥ 80% of L4 criteria (P1-P3 + all remaining)                                          |
+
+Exclude N/A criteria from each level's set before computing the percentage.
 
 ### Step 4 — Generate the Enhancement Plan
 
@@ -222,20 +298,22 @@ report. The plan must follow these rules:
    the modern equivalent (see `resources/modernization_recommendations.md`)
    rather than adding a parallel tool. Mark legacy as "replace" not "add
    alongside".
-3. **Agent platform conventions**: Use the agent context format appropriate for
-   the target platform (e.g., `.agent/rules/` for Gemini CLI, `AGENTS.md` for
-   Factory AI, `.cursorrules` for Cursor). Use `.agent/workflows/` or equivalent
-   for repeatable commands. Regardless of format, agent files must **reference**
-   `README.md` and `docs/` as the single source of truth — never duplicate
-   their content.
+3. **Agent context**: Recommend `AGENTS.md` as the universal entry file for any
+   IDE or AI agent. Use `.agent/workflows/` or equivalent for repeatable
+   commands. Agent files must **reference** `README.md` and `docs/` as the
+   single source of truth — never duplicate their content.
 4. **Minimal invasiveness**: Prefer config/documentation changes over code
    changes. Code changes only when a modernization migration requires it (e.g.,
    switching test framework).
 5. **Explicit breaking changes**: If a modernization would break existing
    workflows (e.g., replacing isort hook with ruff), note it with a
    `> [!WARNING]` callout.
-6. **Pros/Cons table**: Every plan must end with a pros/cons comparison.
-7. **Verification plan**: Include automated and manual verification steps.
+6. **Projected level + re-evaluation**: Each phase must include a **projected
+   level** (estimated level if all phase tasks are completed) and a
+   **re-evaluation task** instructing the agent to re-run the evaluation after
+   changes and report the **actual level** reached.
+7. **Pros/Cons table**: Every plan must end with a pros/cons comparison.
+8. **Verification plan**: Include automated and manual verification steps.
 
 ### Step 5 — Save the Report
 

@@ -8,6 +8,9 @@ adapted for modern tooling standards and agent platform conventions.
 | Property | Value |
 | --- | --- |
 | Date | {{YYYY-MM-DDThh:mm}} |
+| Project type | {{PROJECT_TYPE}} |
+| Repository type | {{REPO_TYPE}} |
+| Documentation language | {{DOC_LANGUAGE}} |
 | Language | {{LANGUAGE}} |
 | Framework | {{FRAMEWORK}} |
 | Package manager | {{PACKAGE_MANAGER}} |
@@ -31,6 +34,9 @@ adapted for modern tooling standards and agent platform conventions.
 
 **Overall estimated level: L? (??%)**
 
+> Criteria marked **N/A** are excluded from the scoring denominator based on
+> the project type ({{PROJECT_TYPE}}) and repository type ({{REPO_TYPE}}).
+
 ---
 
 ## Detailed Pillar Evaluation
@@ -39,7 +45,10 @@ adapted for modern tooling standards and agent platform conventions.
 
 | Criterion | Status | Evidence |
 |---|---|---|
-| Criterion name | ✅/⚠️/❌ | File link or explanation |
+| Criterion name | ✅/⚠️/❌/N/A | File link or explanation |
+
+Use N/A for criteria that do not apply to the project type or repository type.
+N/A criteria are excluded from the scoring denominator.
 
 -->
 
@@ -53,6 +62,7 @@ adapted for modern tooling standards and agent platform conventions.
 | Pre-commit hooks | | |
 | CI enforces lint/format | | |
 | Import sorting | | |
+| Linter targets changed code | | |
 
 ### 2. Build System
 
@@ -85,6 +95,8 @@ adapted for modern tooling standards and agent platform conventions.
 | Architecture docs | | |
 | Env vars documented | | |
 | API documentation | | |
+| User manual | | |
+| Auto-generated docs | | |
 | Contributing guide | | |
 | Changelog | | |
 | Code conventions | | |
@@ -184,6 +196,8 @@ Verify `docs/` has a `README.md` index, design docs, and coding patterns.
 
 ### Phase 1 — Unlock Level {{NEXT_LEVEL}} (Quick Wins)
 
+> **Projected level after Phase 1: L? (??%)**
+
 <!-- List each file change:
 
 #### [NEW] [filename](file:///absolute/path)
@@ -197,13 +211,32 @@ Description of what to remove (only for replaced legacy files).
 
 -->
 
+#### Re-evaluate
+
+Run the agent-readiness evaluation again to determine the actual level reached.
+Report: **Actual level after Phase 1: L? (??%)**
+
 ### Phase 2 — Strengthen Level {{NEXT_LEVEL}}
+
+> **Projected level after Phase 2: L? (??%)**
 
 <!-- More changes for solidifying the level -->
 
+#### Re-evaluate
+
+Run the agent-readiness evaluation again to determine the actual level reached.
+Report: **Actual level after Phase 2: L? (??%)**
+
 ### Phase 3 — Path to Level {{NEXT_LEVEL + 1}}
 
+> **Projected level after Phase 3: L? (??%)**
+
 <!-- Changes that push toward the next level -->
+
+#### Re-evaluate
+
+Run the agent-readiness evaluation again to determine the actual level reached.
+Report: **Actual level after Phase 3: L? (??%)**
 
 ---
 

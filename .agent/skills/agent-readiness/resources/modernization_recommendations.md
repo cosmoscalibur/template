@@ -240,10 +240,10 @@ repos:
 
 | Scenario | Recommended | Notes |
 | --- | --- | --- |
-| No agent context | Add agent context files for the target platform | `.agent/rules/` for Gemini CLI / Antigravity, `AGENTS.md` for Factory AI, `.cursorrules` for Cursor, `.github/copilot-instructions.md` for Copilot. Content must reference README/docs, not restate them. |
+| No agent context | Add `AGENTS.md` | `AGENTS.md` is the recommended universal entry file for any IDE or AI agent (supported by Antigravity since March 9, 2026). Content must reference README/docs, not restate them. |
 | Agent files duplicate README/docs | Refactor to reference existing docs | Replace duplicated content with pointers (e.g., "Read `docs/architecture/` for…"). Add only agent-specific items: coding patterns, architectural constraints, doc maintenance rules. |
 
-**Example** — a well-structured `.agent/rules/` or `AGENTS.md` section:
+**Example** — a well-structured `AGENTS.md`:
 
 ```markdown
 # Documentation Context
