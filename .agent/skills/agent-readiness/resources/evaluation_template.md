@@ -72,7 +72,13 @@ N/A criteria are excluded from the scoring denominator.
 | Dependencies pinned | | |
 | Single-command install | | |
 | Reproducible CI builds | | |
-| Dockerized build | | |
+| B5.1 Dockerfile exists | | |
+| B5.2 Multi-stage build | | |
+| B5.3 `.dockerignore` | | |
+| B5.4 Non-root user | | |
+| B5.5 Pinned base image | | |
+
+**B5 Score**: ___ / 5 → ✅ (B5.1 + ≥3) / ⚠️ (B5.1 + <3) / ❌ (no Dockerfile)
 
 ### 3. Testing
 
@@ -86,6 +92,17 @@ N/A criteria are excluded from the scoring denominator.
 | Coverage threshold | | |
 | Integration tests | | |
 | Test factories/fixtures | | |
+| TDD methodology | | |
+
+**T9 — TDD Methodology**
+
+| Check | Status | Evidence |
+| --- | --- | --- |
+| TDD documented in contributing/coding patterns | | |
+| Positive test cases present | | |
+| Negative test cases present | | |
+
+**T9 Score**: ✅ (documented + both) / ⚠️ (partial) / ❌ (neither)
 
 ### 4. Documentation
 
@@ -95,11 +112,14 @@ N/A criteria are excluded from the scoring denominator.
 | Architecture docs | | |
 | Env vars documented | | |
 | API documentation | | |
-| User manual | | |
-| Auto-generated docs | | |
+| D5.1 User manual | | |
+| D5.2 Auto-generated docs | | |
 | Contributing guide | | |
-| Changelog | | |
+| D7.1 Changelog exists | | |
+| D7.2 Progressive fragments | | |
 | Code conventions | | |
+
+**D7 Score**: ✅ (D7.1 + D7.2) / ⚠️ (only CHANGELOG) / ❌ (none)
 
 **D1 — README Content Quality**
 
@@ -114,10 +134,13 @@ Verify `docs/` has a `README.md` index, design docs, and coding patterns.
 
 | Sub-criterion | Status | Evidence | Source |
 | --- | --- | --- | --- |
-| D3.1 Architectural constraints | | | |
+| D3.1 Agent workflow references | | | |
 | D3.2 Doc maintenance rules | | | |
+| D3.3 Minimal agent skills | | | |
 
-**D3 Score**: ___ / 2 → ✅ (2) / ⚠️ (1) / ❌ (0 or duplicates README/docs)
+**D3 Score**: ___ / 3 → ✅ (3/3) / ⚠️ (2/3 or misplaced restrictions) / ❌ (≤1 or duplicates)
+
+**Agent-specific vs general check**: <!-- Flag any general restrictions found in AGENTS.md -->
 
 **Accuracy notes**: <!-- Document any mismatches between docs and actual config -->
 
@@ -159,6 +182,24 @@ Verify `docs/` has a `README.md` index, design docs, and coding patterns.
 | PR template | | |
 | Issue labeling | | |
 | Project board | | |
+
+**K1 — Issue Template Content**
+
+| Check | Status |
+| --- | --- |
+| Bug report template (structured) | |
+| Feature request template (structured) | |
+
+**K2 — PR Template Content**
+
+| Sub-criterion | Status | Evidence |
+| --- | --- | --- |
+| K2.1 Issue link placeholder | | |
+| K2.2 Description + checklist + changelog reminder | | |
+
+**K2 Score**: ✅ (K2.1 + K2.2) / ⚠️ (template exists, missing sub-criteria) / ❌ (no template)
+
+**K3 — Label Consistency**: <!-- Note any labels mismatched for repo type -->
 
 ### 9. Product & Experimentation
 

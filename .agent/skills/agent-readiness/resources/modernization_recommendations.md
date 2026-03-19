@@ -197,6 +197,13 @@ repos:
 | CircleCI / Travis CI | GitHub Actions | If repo is on GitHub, native Actions reduce context-switching. |
 | No caching | Cache lockfile in CI | Speeds up builds significantly. Use the correct cache key (lockfile hash). |
 
+### Changelog
+
+| Legacy | Modern | Migration Notes |
+| --- | --- | --- |
+| Manual `CHANGELOG.md` edits | `changelog.d/` fragment directory | Fragment-per-PR avoids merge conflicts. Agent creates fragments, consolidates before release. Optional tooling: towncrier, scriv, changie. |
+| No changelog | `CHANGELOG.md` + fragment workflow | Start with fragment pattern from day one. Document process in contributing guide. |
+
 ### Security
 
 | Legacy | Modern | Migration Notes |
