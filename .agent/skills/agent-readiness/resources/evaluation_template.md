@@ -128,8 +128,6 @@ N/A criteria are excluded from the scoring denominator.
 | D7.1 Changelog exists | | |
 | D7.2 Progressive fragments | | |
 | Code conventions | | |
-| D9 CLI best practices | | |
-| D10 Accessibility (WCAG) | | |
 
 **D7 Score**: ✅ (D7.1 + D7.2) / ⚠️ (only CHANGELOG) / ❌ (none)
 
@@ -155,6 +153,19 @@ Verify `docs/` has a `README.md` index, design docs, and coding patterns.
 **Agent-specific vs general check**: <!-- Flag any general restrictions found in AGENTS.md -->
 
 **Accuracy notes**: <!-- Document any mismatches between docs and actual config -->
+
+**D8 — Domain Convention Completeness**
+
+Verify that code conventions (D8) include domain-specific topics for the
+project type. Use the project-type convention recommendations table in the
+skill to evaluate completeness.
+
+| Check | Status | Evidence |
+| --- | --- | --- |
+| General conventions (style, naming, patterns) | | |
+| Domain-specific conventions per project type | | |
+
+**D8 Score**: ✅ (general + domain) / ⚠️ (general only, domain missing) / ❌ (none)
 
 ### 5. Dev Environment
 

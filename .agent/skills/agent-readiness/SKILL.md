@@ -192,9 +192,7 @@ present; ⚠️ partial (one without the other); ❌ neither.
 | D5.2 | Auto-generated docs              | Generated documentation (cargo doc, Sphinx, typedoc, etc.) — applies to all project types                         |
 | D6   | Contributing guide               | CONTRIBUTING.md or contributing section in README                                                                 |
 | D7   | Changelog                        | See D7 sub-checks below                                                                                           |
-| D8   | Code conventions documented      | Style guide, naming conventions, patterns documented                                                              |
-| D9   | CLI best practices               | CLI UX patterns documented: help text, exit codes, input validation, color/no-color, signal handling. Applies to `cli-tool`; N/A for others |
-| D10  | Accessibility (WCAG)             | WCAG compliance documented: semantic HTML, ARIA, keyboard navigation, color contrast, screen reader support. Applies to `web-app` and `desktop-app`; N/A for others |
+| D8   | Code conventions documented      | Style guide, naming conventions, patterns documented. Must include domain-specific conventions per project type (see D8 guidance below) |
 
 **Cross-reference accuracy**: For every Documentation criterion, verify that
 documented content matches the actual repository. Check that stated
@@ -281,6 +279,30 @@ contributing guide (D6) must document the fragment creation process.
 
 **Scoring D7**: ✅ D7.1 + D7.2; ⚠️ only `CHANGELOG.md` without fragment
 workflow; ❌ no changelog.
+
+**D8 — Code conventions**:
+
+Conventions must cover general coding standards (style guide, naming, patterns)
+**and** the project's domain-specific quality standards, so that agents and
+contributors produce consistent, correct output.
+
+**Project-type convention recommendations** (evaluator guidance — these inform
+D8 completeness, not scored as separate criteria):
+
+| Project type   | Recommended convention topics                                                                         |
+| -------------- | ----------------------------------------------------------------------------------------------------- |
+| `cli-tool`     | CLI UX patterns: help text, exit codes, stdout/stderr separation, `--no-color` / `NO_COLOR`, signal handling |
+| `web-app`      | Accessibility standards (WCAG target level), component patterns, responsive design guidelines          |
+| `desktop-app`  | Accessibility standards (WCAG target level), platform conventions, keyboard navigation                 |
+| `library`      | Versioning policy (semver), deprecation strategy, public API surface, backward compatibility           |
+| `ai/ml`        | Model documentation standards (model cards), data conventions, reproducibility requirements            |
+| `agent`        | Behavior contracts, tool inventory, safety boundaries, escalation rules                               |
+| `qa-automation`| Test strategy conventions, naming, organization, test data management                                 |
+| `cloud-service`| Infrastructure conventions, resource naming, environment promotion strategy                           |
+
+**Scoring D8**: ✅ general conventions **and** domain-specific conventions
+documented; ⚠️ general conventions present but domain-specific topics missing;
+❌ no conventions documented.
 
 #### Pillar 5: Dev Environment
 
@@ -396,8 +418,7 @@ are filtered by the repository type.
 | P1 Analytics           | ✅    | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | N/A   |
 | P2 Feature flags       | ✅    | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | ⚠️    |
 | P3 A/B testing         | ✅    | ✅  | N/A     | N/A | N/A     | N/A   | N/A     | N/A   |
-| D9 CLI best practices  | N/A   | N/A | N/A     | ✅  | N/A     | N/A   | N/A     | N/A   |
-| D10 Accessibility      | N/A   | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | N/A   |
+
 
 > [!NOTE]
 > ⚠️ in the matrix means the criterion **applies** but is commonly optional —
@@ -433,7 +454,7 @@ for the project type and repository type):
 | ----- | ----------- |
 | L1 Functional | Starting point (all repos) |
 | L2 Documented | ≥ 80% of L1 criteria pass (S1-S3, B1-B2, T1-T4, D1, D3, E3, X1) |
-| L3 Standardized | L2 + ≥ 80% of L2 criteria (D2, D3.3, D4-D5, D9-D10, E1-E2, O1-O2, K1-K2) |
+| L3 Standardized | L2 + ≥ 80% of L2 criteria (D2, D3.3, D4-D5, E1-E2, O1-O2, K1-K2) |
 | L4 Optimized | L3 + ≥ 80% of L3 criteria (S4-S5, S7, B3-B4, T5-T6, T9, X2-X3) |
 | L5 Autonomous | L4 + ≥ 80% of L4 criteria (S6, B5, T7-T8, D5.1, D5.2, D6-D8, E4-E5, O3-O5, X4-X5, K3-K4, P1-P3) |
 
