@@ -35,9 +35,18 @@ not provide these in the prompt, **ask before proceeding**.
      documentation (docs in one language, comments/commits in another) as ⚠️
      under D1 and D8, recommending uniform language for maintainability.
 3. **Project type**: `cloud-service`, `web-app`, `desktop-app`, `cli-tool`,
-   `library`, or `ai/ml`.
+   `library`, `ai/ml`, `qa-automation`, or `agent`.
    - Determines which criteria are **N/A** — excluded from the scoring
      denominator. See the applicability matrix in Step 2.
+4. **Monorepo check**: Does the repository contain multiple project types?
+   - If yes, collect all applicable types as a comma-separated list.
+   - When multiple project types are declared, a criterion is **N/A only if it
+     is N/A for all** declared types. If any type marks it ✅ or ⚠️, the
+     criterion applies.
+   - The scoring denominator uses the **union** of applicable criteria across
+     all declared types.
+   - The Ecosystem table records all types. Per-pillar evidence may note which
+     subproject a criterion applies to.
 
 ### Step 1 — Detect the Ecosystem
 
@@ -184,6 +193,8 @@ present; ⚠️ partial (one without the other); ❌ neither.
 | D6   | Contributing guide               | CONTRIBUTING.md or contributing section in README                                                                 |
 | D7   | Changelog                        | See D7 sub-checks below                                                                                           |
 | D8   | Code conventions documented      | Style guide, naming conventions, patterns documented                                                              |
+| D9   | CLI best practices               | CLI UX patterns documented: help text, exit codes, input validation, color/no-color, signal handling. Applies to `cli-tool`; N/A for others |
+| D10  | Accessibility (WCAG)             | WCAG compliance documented: semantic HTML, ARIA, keyboard navigation, color contrast, screen reader support. Applies to `web-app` and `desktop-app`; N/A for others |
 
 **Cross-reference accuracy**: For every Documentation criterion, verify that
 documented content matches the actual repository. Check that stated
@@ -368,21 +379,25 @@ Criteria marked **N/A** are excluded from the scoring denominator based on the
 project type collected in Step 0. Additionally, Task Discovery criteria (K1–K4)
 are filtered by the repository type.
 
-| Criterion             | cloud | web | desktop | cli | library | ai/ml |
-| --------------------- | ----- | --- | ------- | --- | ------- | ----- |
-| B5 Dockerized build   | ✅    | ✅  | N/A     | N/A | N/A     | ⚠️    |
-| D5 API documentation  | ✅    | ✅  | N/A     | ✅  | ✅      | N/A   |
-| D5.1 User manual     | N/A   | N/A | ✅      | ✅  | N/A     | N/A   |
-| D5.2 Auto-gen docs   | ✅    | ✅  | ✅      | ✅  | ✅      | ✅    |
-| E3 Docker Compose     | ✅    | ✅  | N/A     | N/A | N/A     | ⚠️    |
-| E5 Seed data          | ✅    | ✅  | N/A     | N/A | N/A     | ✅    |
-| O1 Structured logging | ✅    | ✅  | ⚠️      | ⚠️  | N/A     | ⚠️    |
-| O2 Error tracking     | ✅    | ✅  | ✅      | N/A | N/A     | N/A   |
-| O4 Distributed tracing| ✅    | N/A | N/A     | N/A | N/A     | N/A   |
-| O5 Health check       | ✅    | ✅  | N/A     | N/A | N/A     | ✅    |
-| P1 Analytics          | ✅    | ✅  | ✅      | N/A | N/A     | N/A   |
-| P2 Feature flags      | ✅    | ✅  | ✅      | N/A | N/A     | N/A   |
-| P3 A/B testing        | ✅    | ✅  | N/A     | N/A | N/A     | N/A   |
+| Criterion              | cloud | web | desktop | cli | library | ai/ml | qa-auto | agent |
+| ---------------------- | ----- | --- | ------- | --- | ------- | ----- | ------- | ----- |
+| B5 Dockerized build    | ✅    | ✅  | N/A     | N/A | N/A     | ⚠️    | ✅      | ✅    |
+| T5 Coverage tracking   | ✅    | ✅  | ✅      | ✅  | ✅      | ✅    | N/A     | ✅    |
+| T6 Coverage threshold  | ✅    | ✅  | ✅      | ✅  | ✅      | ✅    | N/A     | ✅    |
+| D5 API documentation   | ✅    | ✅  | N/A     | ✅  | ✅      | N/A   | ⚠️      | ⚠️    |
+| D5.1 User manual       | N/A   | N/A | ✅      | ✅  | N/A     | N/A   | ✅      | ⚠️    |
+| D5.2 Auto-gen docs     | ✅    | ✅  | ✅      | ✅  | ✅      | ✅    | ⚠️      | ✅    |
+| E3 Docker Compose      | ✅    | ✅  | N/A     | N/A | N/A     | ⚠️    | ✅      | ✅    |
+| E5 Seed data           | ✅    | ✅  | N/A     | N/A | N/A     | ✅    | ✅      | ✅    |
+| O1 Structured logging  | ✅    | ✅  | ⚠️      | ⚠️  | N/A     | ⚠️    | ⚠️      | ✅    |
+| O2 Error tracking      | ✅    | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | ✅    |
+| O4 Distributed tracing | ✅    | N/A | N/A     | N/A | N/A     | N/A   | N/A     | ✅    |
+| O5 Health check        | ✅    | ✅  | N/A     | N/A | N/A     | ✅    | N/A     | ✅    |
+| P1 Analytics           | ✅    | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | N/A   |
+| P2 Feature flags       | ✅    | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | ⚠️    |
+| P3 A/B testing         | ✅    | ✅  | N/A     | N/A | N/A     | N/A   | N/A     | N/A   |
+| D9 CLI best practices  | N/A   | N/A | N/A     | ✅  | N/A     | N/A   | N/A     | N/A   |
+| D10 Accessibility      | N/A   | ✅  | ✅      | N/A | N/A     | N/A   | N/A     | N/A   |
 
 > [!NOTE]
 > ⚠️ in the matrix means the criterion **applies** but is commonly optional —
@@ -397,16 +412,31 @@ Count pass/partial/fail per pillar. Scoring rules:
 - ❌ = 0 points
 - **N/A** = excluded (does not count toward the denominator)
 
+**Level definitions** (based on
+[Factory AI](https://docs.factory.ai/web/agent-readiness/overview)):
+
+| Level | Name | Meaning | Decision Question for New Criteria |
+| ----- | ---- | ------- | ---------------------------------- |
+| L1 | **Functional** | Code works, basic tooling exists — agent can build, run, and get feedback | *Does this make the code functional and give the agent basic feedback?* |
+| L2 | **Documented** | Knowledge is captured and accessible — agent understands architecture, domain rules, and conventions | *Does this document knowledge the agent needs to produce correct output?* |
+| L3 | **Standardized** | Processes are enforced and reproducible — CI gates, quality thresholds, and automated checks prevent regressions | *Does this standardize a process so quality is enforced automatically?* |
+| L4 | **Optimized** | Infrastructure is polished and complete — full observability, debugging, contribution workflows, and self-service | *Does this optimize the development experience for full self-service?* |
+| L5 | **Autonomous** | Agent can drive product decisions — experimentation, analytics, and feature management | *Does this enable autonomous product experimentation?* |
+
+Each level's criteria are the **actionable TODO list for repos at that level**.
+When ≥ 80% of applicable criteria pass, the repo graduates to the next level.
+
 **Level thresholds** (based on **applicable** criteria — those not marked N/A
 for the project type and repository type):
 
-| Level | Requirement                                                                                 |
-| ----- | ------------------------------------------------------------------------------------------- |
-| L1    | Starting point (all repos)                                                                  |
-| L2    | ≥ 80% of L1 criteria pass (S1-S3, B1-B2, T1-T4, D1, D3, E3, X1)                             |
-| L3    | L2 + ≥ 80% of L2 criteria (S4-S5, S7, B3-B4, T5-T6, T9, D2, D3.3, D4-D5, E1-E2, O1-O2, X2-X3, K1-K2) |
-| L4    | L3 + ≥ 80% of L3 criteria (S6, B5, T7-T8, D5.1, D5.2, D6-D8, E4-E5, O3-O5, X4-X5, K3-K4)   |
-| L5    | L4 + ≥ 80% of L4 criteria (P1-P3 + all remaining)                                          |
+| Level | Requirement |
+| ----- | ----------- |
+| L1 Functional | Starting point (all repos) |
+| L2 Documented | ≥ 80% of L1 criteria pass (S1-S3, B1-B2, T1-T4, D1, D3, E3, X1) |
+| L3 Standardized | L2 + ≥ 80% of L2 criteria (D2, D3.3, D4-D5, D9-D10, E1-E2, O1-O2, K1-K2) |
+| L4 Optimized | L3 + ≥ 80% of L3 criteria (S4-S5, S7, B3-B4, T5-T6, T9, X2-X3) |
+| L5 Autonomous | L4 + ≥ 80% of L4 criteria (S6, B5, T7-T8, D5.1, D5.2, D6-D8, E4-E5, O3-O5, X4-X5, K3-K4, P1-P3) |
+
 
 Exclude N/A criteria from each level's set before computing the percentage.
 

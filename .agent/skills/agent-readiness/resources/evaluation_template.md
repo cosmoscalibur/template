@@ -5,20 +5,30 @@ adapted for modern tooling standards and agent platform conventions.
 
 ## Ecosystem
 
+<!-- Project Classification: these properties map to Step 0 (context) and
+     Step 1 (ecosystem detection) of the agent-readiness skill. Fill them
+     before starting the evaluation. -->
+
 | Property | Value |
 | --- | --- |
 | Date | {{YYYY-MM-DDThh:mm}} |
-| Project type | {{PROJECT_TYPE}} |
-| Repository type | {{REPO_TYPE}} |
-| Documentation language | {{DOC_LANGUAGE}} |
-| Language | {{LANGUAGE}} |
+| Repo type | {{REPO_TYPE}} (`issues-only` / `pr-only` / `both`) |
+| Project type | {{PROJECT_TYPE}} (`cloud-service` / `web-app` / `desktop-app` / `cli-tool` / `library` / `ai/ml` / `qa-automation` / `agent`) |
+| Language (programming) | {{LANGUAGE}} |
+| Language (docs) | {{DOC_LANGUAGE}} |
 | Framework | {{FRAMEWORK}} |
+| Stack | {{STACK}} (e.g., `Python + FastAPI + PostgreSQL`) |
 | Package manager | {{PACKAGE_MANAGER}} |
 | Detected tools | {{DETECTED_TOOLS}} |
 
+> [!NOTE]
+> For monorepos with multiple project types, list all applicable types
+> comma-separated. A criterion is N/A only if N/A for **all** declared types.
+
 ## Current Readiness Summary
 
-<!-- Fill one row per pillar. Use emoji: 🟢 (L3+), 🟡 (L2), 🔴 (L1) -->
+<!-- Fill one row per pillar. Use emoji:
+     🟢 Standardized+ (L3+), 🟡 Documented (L2), 🔴 Functional (L1) -->
 
 | Pillar | Estimated Level | Score | Key Gap |
 | --- | --- | --- | --- |
@@ -32,7 +42,7 @@ adapted for modern tooling standards and agent platform conventions.
 | Task Discovery | **L?** | ? | |
 | Product & Experimentation | **L?** | ? | |
 
-**Overall estimated level: L? (??%)**
+**Overall estimated level: L? — {{LEVEL_NAME}} (??%)**
 
 > Criteria marked **N/A** are excluded from the scoring denominator based on
 > the project type ({{PROJECT_TYPE}}) and repository type ({{REPO_TYPE}}).
@@ -118,6 +128,8 @@ N/A criteria are excluded from the scoring denominator.
 | D7.1 Changelog exists | | |
 | D7.2 Progressive fragments | | |
 | Code conventions | | |
+| D9 CLI best practices | | |
+| D10 Accessibility (WCAG) | | |
 
 **D7 Score**: ✅ (D7.1 + D7.2) / ⚠️ (only CHANGELOG) / ❌ (none)
 
