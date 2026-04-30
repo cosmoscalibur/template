@@ -202,10 +202,8 @@ Mark as ⚠️ (partial) if the documentation exists but is outdated.
 
 **D3 — Agent Context**
 
-`AGENTS.md` is the recommended universal entry file for any IDE or AI agent
-(supported by Antigravity since March 9, 2026). Alternative formats
-(`.agent/rules/`, `.cursorrules`, `.github/copilot-instructions.md`) remain
-valid. The **antipattern** is duplicating human-facing documentation into these
+`AGENTS.md` is the recommended universal entry file for any IDE or AI agent.
+The **antipattern** is duplicating human-facing documentation into these
 files instead of referencing it. Agent context files should **point to**
 `README.md` and `docs/` as the single source of truth and add only
 agent-specific instructions.
@@ -237,7 +235,7 @@ and contributing guides should be read before planning and implementing.
 | ---- | ------------------------- | --------------------------------------------------------------------------------------------- | --------------------------- |
 | D3.1 | Agent workflow references | Pointers to warm-memory docs, task-specific loading instructions, workflow commands            | Agent context (`AGENTS.md`) |
 | D3.2 | Doc maintenance rules     | Instructions to keep docs in sync when modifying code                                         | Agent context (`AGENTS.md`) |
-| D3.3 | Minimal agent skills      | At least code review and documentation skills/subagents in `.agent/skills/` or `.agent/workflows/` | Agent context               |
+| D3.3 | Minimal agent skills      | At least code review and documentation skills/subagents in `.agents/skills/` or `.agents/workflows/` | Agent context               |
 
 **D3.3 — Minimal agent skills**:
 
@@ -472,7 +470,7 @@ report. The plan must follow these rules:
    rather than adding a parallel tool. Mark legacy as "replace" not "add
    alongside".
 3. **Agent context**: Recommend `AGENTS.md` as the universal entry file for any
-   IDE or AI agent. Use `.agent/workflows/` or equivalent for repeatable
+   IDE or AI agent. Use `.agents/workflows/` or equivalent for repeatable
    commands. Agent files must **reference** `README.md` and `docs/` as the
    single source of truth — never duplicate their content.
 4. **Minimal invasiveness**: Prefer config/documentation changes over code
